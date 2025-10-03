@@ -10,7 +10,7 @@ const Root = () => {
         <ConnectWallet />
       </div>
       <div className="w-full flex justify-center mt-3">
-        <div className="max-w-6xl w-full">
+        <div className="max-w-7xl w-full">
           <BrowserRouter>
             <Routes>
               <Route index element={<App />} />

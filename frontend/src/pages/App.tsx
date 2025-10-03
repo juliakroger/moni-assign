@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import History from "../components/History";
 import { useFetch, createTransaction } from "../queries/api";
 import { WalletContext } from "../provider/Wallet";
@@ -9,7 +9,9 @@ const App = () => {
   const [amount, setAmount] = useState("");
   const [transactionId, setTransactionId] = useState("");
 
-  const { data: transactions, refetch } = useFetch("/transactions");
+  const { data: transactions, refetch } = useFetch(
+    `/transactions?walletAddress=${walletAddress}`
+  );
 
   const handleTransaction = async () => {
     if (!amount || !walletAddress) return;
@@ -56,7 +58,9 @@ const App = () => {
 
       <div>
         <div className="text-xs uppercase">history</div>
-        {transactions && <History transactions={transactions} />}
+        {transactions && (
+          <History transactions={transactions} walletAddress={walletAddress} />
+        )}
       </div>
     </div>
   );

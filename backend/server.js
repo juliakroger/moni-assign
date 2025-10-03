@@ -14,7 +14,11 @@ mongoose
 
 app.get("/transactions", async (req, res) => {
   try {
-    const txs = await Transaction.find().sort({ date: -1 });
+    const { walletAddress } = req.query;
+
+    const txs = await Transaction.find({
+      $or: [{ receiverWallet: walletAddress }, { senderWallet: walletAddress }],
+    }).sort({ date: -1 });
     res.json(txs);
   } catch (err) {
     console.error("Error on GET /transactions", err);
@@ -33,13 +37,41 @@ app.post("/transactions", async (req, res) => {
   }
 });
 
-app.put("/transactions", async (req, res) => {
+app.get("/transaction/:id", async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const txs = await Transaction.find().sort({ date: -1 });
-    res.json(txs);
+    const tx = await Transaction.findById(id);
+
+    if (!tx) {
+      return res.status(404).json({ error: "Transaction not found" });
+    }
+
+    res.json(tx);
   } catch (err) {
-    console.error("Error on PUT /transactions", err);
-    res.status(500).json({ error: "Failed to update transactions" });
+    console.error(`Error on GET /transaction/${id}`, err);
+    res.status(500).json({ error: "Failed to get transaction" });
+  }
+});
+
+app.put("/transaction/:id", async (req, res) => {
+  const { id } = req.params;
+  const { transactionHash, status, senderWallet } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: "Transaction ID is required" });
+  }
+
+  try {
+    await Transaction.findByIdAndUpdate(id, {
+      transactionHash,
+      status,
+      senderWallet,
+    });
+    res.json({});
+  } catch (err) {
+    console.error("Error on PUT /transactions/:id", err);
+    res.status(500).json({ error: "Failed to update transaction" });
   }
 });
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import type { Address } from "viem";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -17,6 +18,26 @@ export const createTransaction = async (
     return response.data;
   } catch (error) {
     console.error("Failed to create transaction", error);
+    return null;
+  }
+};
+
+export const updateTransaction = async (
+  id: string,
+  transactionHash: string,
+  status: "PENDING" | "FAILED" | "APPROVED",
+  senderWallet: Address
+) => {
+  try {
+    const response = await axios.put(`/transaction/${id}`, {
+      transactionHash,
+      status,
+      senderWallet,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update transaction", error);
     return null;
   }
 };
