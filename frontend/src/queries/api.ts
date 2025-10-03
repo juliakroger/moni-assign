@@ -3,6 +3,24 @@ import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
+export const createTransaction = async (
+  amount: string,
+  walletAddress?: string
+) => {
+  try {
+    const response = await axios.post("/transactions", {
+      amount,
+      token: "BNB",
+      receiverWallet: walletAddress,
+      date: new Date(),
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to create transaction", error);
+    return null;
+  }
+};
+
 export const useFetch = (endpoint: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<unknown>();

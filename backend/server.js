@@ -13,19 +13,34 @@ mongoose
   .catch((err) => console.error("Erro MongoDB:", err));
 
 app.get("/transactions", async (req, res) => {
-  const txs = await Transaction.find().sort({ date: -1 });
-  res.json(txs);
+  try {
+    const txs = await Transaction.find().sort({ date: -1 });
+    res.json(txs);
+  } catch (err) {
+    console.error("Error on GET /transactions", err);
+    res.status(500).json({ error: "Failed to get transactions" });
+  }
 });
 
 app.post("/transactions", async (req, res) => {
-  const tx = new Transaction(req.body);
-  await tx.save();
-  res.status(201).json(tx);
+  try {
+    const tx = new Transaction(req.body);
+    await tx.save();
+    res.status(201).json(tx);
+  } catch (err) {
+    console.error("Error on POST /transactions", err);
+    res.status(500).json({ error: "Failed to create transaction" });
+  }
 });
 
 app.put("/transactions", async (req, res) => {
-  const txs = await Transaction.find().sort({ date: -1 });
-  res.json(txs);
+  try {
+    const txs = await Transaction.find().sort({ date: -1 });
+    res.json(txs);
+  } catch (err) {
+    console.error("Error on PUT /transactions", err);
+    res.status(500).json({ error: "Failed to update transactions" });
+  }
 });
 
 app.listen(4000, () => console.log("Backend Running"));

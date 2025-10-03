@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema({
-  chain: { type: Number, required: true },
+  // chain: { type: Number, required: true },
   amount: { type: String, required: true },
   token: { type: String, required: true },
   status: {
@@ -9,9 +9,9 @@ const transactionSchema = new mongoose.Schema({
     enum: ["PENDING", "APPROVED", "FAILED"],
     default: "PENDING",
   },
-  transactionHash: { type: String, required: true },
+  transactionHash: { type: String },
   date: { type: Date, default: Date.now },
-  senderWallet: { type: String, required: true },
+  senderWallet: { type: String },
   receiverWallet: { type: String, required: true },
 });
 
